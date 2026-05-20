@@ -39,5 +39,9 @@ workflows:
   build_test_deploy_pipeline:
     jobs:
       - build
-      - test
-      - deploy
+      - test:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - test
