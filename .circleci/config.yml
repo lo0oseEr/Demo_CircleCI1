@@ -1,24 +1,47 @@
-version 2.1
-  job1:
-    CicleCI-job:
-      docker:
-        - image: cimg/base:current
-      steps:
-        - checkout
-        - run:
-            name: "Say hello"
-            command: "We need to meet today?"
-  job2:
-    CicleCI-job:
-      docker:
-        - image: cimg/base:current
-      steps:
-        - checkout
-        - run:
-            name: "Say hello"
-            command: "Yeah?"
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - checkout
+      - run:
+          name: Build Application
+          command: |
+            echo "Building the application..."
+            mkdir -p build
+            echo "Build completed" > build/output.txt
+
+  test:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - checkout
+      - run:
+          name: Run Tests
+          command: |
+            echo "Running tests..."
+            echo "All tests passed successfully"
+
+  deploy:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - checkout
+      - run:
+          name: Deploy Application
+          command: |
+            echo "Deploying the application..."
+            echo "Deployment completed successfully"
+
 workflows:
-  workflow1:
+  build_test_deploy_pipeline:
     jobs:
-      - job1
-      - job2
+      - build
+      - test:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - test
